@@ -12,6 +12,9 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import CustomText from '../components/global/customText';
 import {COLORS, FONTS, LIGHT_COLORS} from '../utils/constants';
 import {SCREEN_HEIGHT, SCREEN_WIDTH} from '../utils/scaling';
+import {initializeTstListeners} from '../utils/ttsListeners';
+import Tts from 'react-native-tts';
+import {resetAndNavigate} from '../utils/navigation-utils';
 
 const bottomColors = [...LIGHT_COLORS].reverse();
 
@@ -24,8 +27,14 @@ const Splashscreen = () => {
       messageContainerAnimation.value = SCREEN_HEIGHT * 0.001;
       setTimeout(() => {
         baymaxAnimation.value = -SCREEN_HEIGHT * 0.002;
+        // Tts.speak('HELLO WORLD! I AM Baymax');
       }, 1000);
     };
+
+    setTimeout(() => {
+      resetAndNavigate('Baymaxscreen');
+    }, 4000);
+    initializeTstListeners();
     launchAnimation();
   }, []);
   const animatedImageStyle = useAnimatedStyle(() => {
