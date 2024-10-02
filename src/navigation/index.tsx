@@ -15,7 +15,13 @@ const Navigation: FC = () => {
           headerShown: false,
         }}>
         <Stack.Screen name="Splashscreen" component={Splashscreen} />
-        <Stack.Screen name="Baymaxscreen" component={Baymaxscreen} />
+        <Stack.Screen
+          name="Baymaxscreen"
+          options={{
+            animation: 'fade',
+          }}
+          component={Baymaxscreen}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
