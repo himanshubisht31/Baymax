@@ -27,7 +27,7 @@ const Splashscreen = () => {
       messageContainerAnimation.value = SCREEN_HEIGHT * 0.001;
       setTimeout(() => {
         baymaxAnimation.value = -SCREEN_HEIGHT * 0.002;
-        // Tts.speak('HELLO WORLD! I AM Baymax');
+        // Tts.speak('HELLO! I AM Baymax');
       }, 1000);
     };
 
