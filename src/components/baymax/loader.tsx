@@ -1,6 +1,7 @@
 import {View, Text} from 'react-native';
 import React from 'react';
 import LottieView from 'lottie-react-native';
+import {SCREEN_WIDTH} from '../../utils/scaling';
 
 const Loader = () => {
   return (
@@ -10,7 +11,7 @@ const Loader = () => {
         loop
         autoPlay
         style={{
-          width: 280,
+          width: SCREEN_WIDTH * 0.5,
           height: 100,
         }}
       />
