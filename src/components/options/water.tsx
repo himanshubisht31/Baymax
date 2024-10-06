@@ -16,7 +16,7 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated';
 import {CircularSliceItem} from './circularSliceItem';
-import {playSound} from '../../utils/VoiceUtils';
+import {playSound} from '../../utils/voiceUtils';
 import {playTTS} from '../../utils/ttsListeners';
 
 const Water = () => {

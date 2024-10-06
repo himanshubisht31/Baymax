@@ -1,7 +1,7 @@
 import React, {FC} from 'react';
 import {StyleSheet, TouchableOpacity} from 'react-native';
 import {RFValue} from 'react-native-responsive-fontsize';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {circleRadius} from '../../utils/constants';
 
 const GenericOption: FC<{item: any; onPress: (type: string) => void}> = ({
@@ -10,25 +10,26 @@ const GenericOption: FC<{item: any; onPress: (type: string) => void}> = ({
 }) => {
   let iconName;
   let iconColor = '#fff';
+
   switch (item) {
     case 'meditation':
-      iconName = 'nature-people';
+      iconName = 'meditation';
       iconColor = '#2DEC72';
       break;
     case 'pedometer':
-      iconName = 'directions-run';
+      iconName = 'walk';
       iconColor = '#2D7BA4';
       break;
     case 'health':
-      iconName = 'health-and-safety';
+      iconName = 'hospital-box';
       iconColor = 'green';
       break;
     case 'happiness':
-      iconName = 'emoji-emotions';
-      iconColor = '#FB26FF';
+      iconName = 'emoticon-happy';
+      iconColor = '#FF5733';
       break;
     default:
-      iconName = 'local-fire-department';
+      iconName = 'fire';
       iconColor = '#FFBC66';
       break;
   }

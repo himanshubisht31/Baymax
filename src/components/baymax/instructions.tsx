@@ -3,6 +3,8 @@ import React, {FC} from 'react';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {RFValue} from 'react-native-responsive-fontsize';
 import LottieView from 'lottie-react-native';
+import Markdown from 'react-native-markdown-display';
+import {FONTS} from '../../utils/constants';
 
 const Instructions: FC<{message: string; onCross: () => void}> = ({
   message,
@@ -26,7 +28,16 @@ const Instructions: FC<{message: string; onCross: () => void}> = ({
             loop
           />
         ) : (
-          <Text></Text>
+          <Markdown
+            style={{
+              body: {
+                fontFamily: FONTS.Theme,
+                padding: 20,
+                fontSize: RFValue(22),
+              },
+            }}>
+            {message}
+          </Markdown>
         )}
       </View>
     </View>

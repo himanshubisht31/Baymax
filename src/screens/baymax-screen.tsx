@@ -7,10 +7,11 @@ import {Loader} from '../components/baymax/loader';
 import {Bighero6} from '../components/baymax/bighero6';
 import {playTTS} from '../utils/ttsListeners';
 import SoundPlayer from 'react-native-sound-player';
-import {playSound} from '../utils/VoiceUtils';
 import {prompt} from '../utils/data';
 import {Pedometer} from '../components/pedometer';
 import {Instructions} from '../components/baymax/instructions';
+import {playSound} from '../utils/voiceUtils';
+import {askAI} from '../service/geminiService';
 
 const Baymaxscreen = () => {
   const [showInstructions, setShowInstructions] = React.useState(false);
@@ -54,6 +55,10 @@ const Baymaxscreen = () => {
         return;
       }
 
+      const data = await askAI(promptText);
+      setMessage(data);
+      playTTS(data);
+
       if (type === 'happiness') {
         setTimeout(() => {
           playSound(sound);
@@ -61,7 +66,6 @@ const Baymaxscreen = () => {
       } else {
         playSound(sound);
       }
-      setMessage(type);
 
       stopBlur();
       setShowLoader(true);
