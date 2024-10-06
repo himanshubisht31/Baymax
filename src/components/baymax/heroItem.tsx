@@ -1,19 +1,21 @@
 import React, {FC, useEffect} from 'react';
-import {StyleSheet, Text} from 'react-native';
+import {StyleSheet} from 'react-native';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withDelay,
   withTiming,
 } from 'react-native-reanimated';
+import {GenericOption} from '../options/genericOption';
 import {Water} from '../options/water';
 
-const HeroItem: FC<{item: string; x: number; y: number; index: number}> = ({
-  item,
-  x,
-  y,
-  index,
-}) => {
+const HeroItem: FC<{
+  item: string;
+  x: number;
+  y: number;
+  index: number;
+  onPress: (type: string) => void;
+}> = ({item, x, y, index, onPress}) => {
   const animationProgress = useSharedValue(0);
 
   useEffect(() => {
@@ -37,8 +39,12 @@ const HeroItem: FC<{item: string; x: number; y: number; index: number}> = ({
   });
 
   return (
-    <Animated.View style={[styles.item, animatedStyle]}>
-      {index === 0 ? <Water key={index} /> : <Text key={index}>{item}</Text>}
+    <Animated.View key={index} style={[styles.item, animatedStyle]}>
+      {item === 'water' ? (
+        <Water />
+      ) : (
+        <GenericOption item={item} onPress={onPress} />
+      )}
     </Animated.View>
   );
 };

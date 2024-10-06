@@ -16,7 +16,16 @@ const Bighero6: FC<{onPress: (type: string) => void}> = ({onPress}) => {
         const x = radius * Math.cos(angle);
         const y = radius * Math.sin(angle);
 
-        return <HeroItem key={index} item={item} x={x} y={y} index={index} />;
+        return (
+          <HeroItem
+            onPress={onPress}
+            key={index}
+            item={item}
+            x={x}
+            y={y}
+            index={index}
+          />
+        );
       })}
     </View>
   );
