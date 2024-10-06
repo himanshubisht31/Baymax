@@ -35,6 +35,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.secondry,
     justifyContent: 'center',
     alignItems: 'center',
+    zIndex: -100,
   },
   loaderContainer: {
     position: 'absolute',

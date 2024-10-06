@@ -6,6 +6,7 @@ import Animated, {
   withDelay,
   withTiming,
 } from 'react-native-reanimated';
+import {Water} from '../options/water';
 
 const HeroItem: FC<{item: string; x: number; y: number; index: number}> = ({
   item,
@@ -37,7 +38,7 @@ const HeroItem: FC<{item: string; x: number; y: number; index: number}> = ({
 
   return (
     <Animated.View style={[styles.item, animatedStyle]}>
-      <Text>{item}</Text>
+      {index === 0 ? <Water key={index} /> : <Text key={index}>{item}</Text>}
     </Animated.View>
   );
 };

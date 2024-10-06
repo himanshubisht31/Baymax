@@ -11,7 +11,7 @@ export const initializeTstListeners = async () => {
       }
     },
   );
-  Tts.setDefaultVoice('hi-in-x-hia-network');
+  Tts.setDefaultVoice('hi-in-x-hic-local');
   Tts.setIgnoreSilentSwitch('ignore');
   Tts.setDefaultEngine('0.7');
   Tts.addEventListener('tts-start', event => {
@@ -29,4 +29,18 @@ export const initializeTstListeners = async () => {
   Tts.addEventListener('tts-finish', event => {
     console.log('🚀 ~ Tts.addEventListener ~ tts-finish:', event);
   });
+};
+
+export const playTTS = async (message: string) => {
+  Tts.getInitStatus()
+    .then(() => {
+      console.log('TTS ENGINE ✅');
+    })
+    .catch(error => {
+      if (error.code === 'no_engine') {
+        console.log('No TTS engine found, installing...');
+        Tts.requestInstallEngine();
+      }
+    });
+  Tts.speak(message);
 };
