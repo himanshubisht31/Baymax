@@ -1,9 +1,9 @@
-import {View, Text, StyleSheet, TouchableOpacity, Image} from 'react-native';
-import React, {FC} from 'react';
-import Icon from 'react-native-vector-icons/Ionicons';
-import {RFValue} from 'react-native-responsive-fontsize';
 import LottieView from 'lottie-react-native';
+import React, {FC} from 'react';
+import {Image, StyleSheet, TouchableOpacity, View} from 'react-native';
 import Markdown from 'react-native-markdown-display';
+import {RFValue} from 'react-native-responsive-fontsize';
+import Icon from 'react-native-vector-icons/Ionicons';
 import {FONTS} from '../../utils/constants';
 
 const Instructions: FC<{message: string; onCross: () => void}> = ({

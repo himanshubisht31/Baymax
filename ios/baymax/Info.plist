@@ -40,6 +40,8 @@
 	<array>
 		<string>arm64</string>
 	</array>
+	 <key>NSMotionUsageDescription</key>
+  <string>We want to access your motion data to count your steps.</string>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
