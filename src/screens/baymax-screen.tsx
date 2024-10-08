@@ -1,23 +1,42 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useReducer} from 'react';
 import {StyleSheet, View} from 'react-native';
-import {Background} from '../components/baymax/background';
 import {useSharedValue, withTiming} from 'react-native-reanimated';
-import {COLORS} from '../utils/constants';
-import {Loader} from '../components/baymax/loader';
-import {Bighero6} from '../components/baymax/bighero6';
-import {playTTS} from '../utils/ttsListeners';
 import SoundPlayer from 'react-native-sound-player';
-import {prompt} from '../utils/data';
-import {Pedometer} from '../components/pedometer';
+import {Background} from '../components/baymax/background';
+import {Bighero6} from '../components/baymax/bighero6';
 import {Instructions} from '../components/baymax/instructions';
-import {playSound} from '../utils/voiceUtils';
+import {Loader} from '../components/baymax/loader';
+import {Pedometer} from '../components/pedometer';
 import {askAI} from '../service/geminiService';
+import {
+  SET_MESSAGE,
+  SET_SHOW_INSTRUCTIONS,
+  SET_SHOW_LOADER,
+  SET_SHOW_PEDOMETER,
+} from '../utils/actions';
+import {COLORS} from '../utils/constants';
+import {prompt} from '../utils/data';
+import {reducer} from '../utils/reducer';
+import {playTTS} from '../utils/ttsListeners';
+import {State} from '../utils/types';
+import {playSound} from '../utils/voiceUtils';
+
+const initialState: State = {
+  showInstructions: false,
+  showLoader: true,
+  message: '',
+  showPedometer: false,
+};
+
+const actionMap: Record<string, {promptText: string; sound: string}> = {
+  meditation: {promptText: prompt.health, sound: 'meditation'},
+  health: {promptText: prompt.health, sound: 'meditation'},
+  happiness: {promptText: prompt.joke, sound: 'laugh'},
+  motivation: {promptText: prompt.motivation, sound: 'motivation'},
+};
 
 const Baymaxscreen = () => {
-  const [showInstructions, setShowInstructions] = React.useState(false);
-  const [showLoader, setShowLoader] = React.useState(true);
-  const [message, setMessage] = React.useState('');
-  const [showPedometer, setShowPedometer] = React.useState(false);
+  const [state, dispatch] = useReducer(reducer, initialState);
   const blurOpacity = useSharedValue(0);
 
   const startBlur = () => {
@@ -35,106 +54,93 @@ const Baymaxscreen = () => {
   const handleError = (err: string) => {
     playTTS('There was an error, please try again');
     startBlur();
-    setMessage('');
-    setShowLoader(true);
+    dispatch({type: SET_MESSAGE, payload: ''});
+    dispatch({type: SET_SHOW_LOADER, payload: true});
     SoundPlayer.stop();
-    setShowInstructions(false);
+    dispatch({type: SET_SHOW_INSTRUCTIONS, payload: false});
     console.log(err);
   };
 
-  const handleResponse = async (
-    type: string,
-    promptText: string,
-    sound: string,
-  ) => {
+  const handleResponse = async (type: string) => {
+    const action = actionMap[type];
+
+    if (!action) {
+      handleError('Invalid action type');
+      return;
+    }
+
     try {
       if (type === 'meditation') {
         playTTS('Focus on your breath');
-        playSound(sound);
-        setMessage('meditation');
+        playSound(action.sound);
+        dispatch({type: SET_MESSAGE, payload: 'meditation'});
         return;
       }
 
-      const data = await askAI(promptText);
-      setMessage(data);
+      const data = await askAI(action.promptText);
+      dispatch({type: SET_MESSAGE, payload: data});
       playTTS(data);
 
       if (type === 'happiness') {
-        setTimeout(() => {
-          playSound(sound);
-        }, 5000);
+        setTimeout(() => playSound(action.sound), 5000);
       } else {
-        playSound(sound);
+        playSound(action.sound);
       }
 
       stopBlur();
-      setShowLoader(true);
+      dispatch({type: SET_SHOW_LOADER, payload: true});
     } catch (error: any) {
       handleError(error);
     } finally {
-      setShowLoader(false);
+      dispatch({type: SET_SHOW_LOADER, payload: false});
     }
   };
 
   const onOptionPressHandler = (type: string) => {
-    setShowInstructions(true);
     if (type === 'pedometer') {
-      setShowPedometer(true);
-      setShowLoader(false);
+      dispatch({type: SET_SHOW_PEDOMETER, payload: true});
+      dispatch({type: SET_SHOW_LOADER, payload: false});
       return;
     }
-    switch (type) {
-      case 'meditation':
-        handleResponse(type, prompt.health, 'meditation');
-        break;
-      case 'health':
-        handleResponse(type, prompt.health, 'meditation');
-        break;
-      case 'happiness':
-        handleResponse(type, prompt.joke, 'laugh');
-        break;
-      case 'motivation':
-        handleResponse(type, prompt.motivation, 'motivation');
-        break;
-      default:
-        handleError('There was no type like this');
-        break;
-    }
+
+    dispatch({type: SET_SHOW_INSTRUCTIONS, payload: true});
+    handleResponse(type);
+  };
+
+  const handleInstructionsCross = () => {
+    startBlur();
+    dispatch({type: SET_MESSAGE, payload: ''});
+    dispatch({type: SET_SHOW_LOADER, payload: true});
+    SoundPlayer.stop();
+    dispatch({type: SET_SHOW_INSTRUCTIONS, payload: false});
+  };
+
+  const handlePedometerCross = () => {
+    startBlur();
+    dispatch({type: SET_MESSAGE, payload: ''});
+    dispatch({type: SET_SHOW_LOADER, payload: true});
+    dispatch({type: SET_SHOW_PEDOMETER, payload: false});
+    SoundPlayer.stop();
+    dispatch({type: SET_SHOW_INSTRUCTIONS, payload: false});
   };
 
   return (
     <View style={styles.container}>
-      {message && (
+      {state.message && (
         <Instructions
-          onCross={() => {
-            startBlur();
-            setMessage('');
-            setShowLoader(true);
-            SoundPlayer.stop();
-            setShowInstructions(false);
-          }}
-          message={message}
+          onCross={handleInstructionsCross}
+          message={state.message}
         />
       )}
-      {showPedometer && (
-        <Pedometer
-          onCross={() => {
-            startBlur();
-            setMessage('');
-            setShowLoader(true);
-            setShowPedometer(false);
-            SoundPlayer.stop();
-            setShowInstructions(false);
-          }}
-          message={message}
-        />
+      {state.showPedometer && (
+        <Pedometer onCross={handlePedometerCross} message={state.message} />
       )}
-      {showLoader && (
+      {state.showLoader && (
         <View style={styles.loaderContainer}>
           <Loader />
         </View>
       )}
-      {!showInstructions && <Bighero6 onPress={onOptionPressHandler} />}
+      {!state.showInstructions && <Bighero6 onPress={onOptionPressHandler} />}
       <Background blurOpacity={blurOpacity} />
     </View>
   );

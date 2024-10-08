@@ -1,0 +1,5 @@
+export const SET_SHOW_INSTRUCTIONS = 'SET_SHOW_INSTRUCTIONS';
+export const SET_SHOW_LOADER = 'SET_SHOW_LOADER';
+export const SET_MESSAGE = 'SET_MESSAGE';
+export const SET_SHOW_PEDOMETER = 'SET_SHOW_PEDOMETER';
+export const RESET = 'RESET';
